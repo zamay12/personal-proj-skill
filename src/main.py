@@ -5,6 +5,7 @@ import typer
 
 from src.chunker import split_book_into_chapters
 from src.ingest import ingest_book
+from src.summarizer import summarize_chapters
 
 
 app = typer.Typer(help="Novel continuation agent commands.")
@@ -28,6 +29,13 @@ def ingest(txt_path: Path) -> None:
         encoding="utf-8",
     )
     typer.echo(f"Saved {len(book.chapters)} chapters to {output_path}")
+
+
+@app.command()
+def summarize() -> None:
+    """Summarize processed chapters and save knowledge-base JSON."""
+    summaries = summarize_chapters()
+    typer.echo(f"Saved {len(summaries)} summaries to kb/summaries.json")
 
 
 if __name__ == "__main__":

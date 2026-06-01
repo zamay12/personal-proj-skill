@@ -21,3 +21,15 @@ class Book(BaseModel):
     source_path: Path | None = None
     encoding: str | None = None
     chapters: list[Chapter] = Field(default_factory=list)
+
+
+class ChapterSummary(BaseModel):
+    chapter_index: int = Field(ge=1)
+    chapter_title: str = Field(min_length=1)
+    summary: str = Field(min_length=1)
+    main_events: list[str]
+    characters: list[str]
+    locations: list[str]
+    new_settings: list[str]
+    open_threads: list[str]
+    emotional_tone: str = Field(min_length=1)
