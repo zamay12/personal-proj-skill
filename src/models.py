@@ -59,3 +59,19 @@ class WorldbuildingItem(EvidenceMixin):
 class ForeshadowingItem(EvidenceMixin):
     clue: str = Field(min_length=1)
     status: str = Field(min_length=1)
+
+
+class ChapterPlan(BaseModel):
+    next_chapter_title: str = Field(min_length=1)
+    chapter_goal: str = Field(min_length=1)
+    beats: list[str] = Field(min_length=1)
+    must_include: list[str]
+    avoid: list[str]
+    ending_hook: str = Field(min_length=1)
+
+
+class ChapterReview(BaseModel):
+    score: float = Field(ge=0, le=100)
+    passed: bool
+    issues: list[str]
+    revision_instruction: str = Field(min_length=1)

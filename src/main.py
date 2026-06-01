@@ -4,6 +4,7 @@ from pathlib import Path
 import typer
 
 from src.chunker import split_book_into_chapters
+from src.continuation import continue_story
 from src.extractor import extract_knowledge
 from src.ingest import ingest_book
 from src.summarizer import summarize_chapters
@@ -49,6 +50,20 @@ def extract() -> None:
         f"{len(result.events)} events, "
         f"{len(result.worldbuilding)} worldbuilding items, "
         f"{len(result.foreshadowing)} foreshadowing items"
+    )
+
+
+@app.command("continue-story")
+def continue_story_command(
+    after_chapter: int = typer.Option(..., help="Continue after this chapter index."),
+    direction: str = typer.Option(..., help="User direction for the next chapter."),
+    words: int = typer.Option(3000, help="Target word count."),
+) -> None:
+    """Plan, draft, review, and revise the next chapter."""
+    result = continue_story(after_chapter=after_chapter, direction=direction, words=words)
+    typer.echo(
+        "Saved continuation outputs to data/outputs/: "
+        f"{result.plan.next_chapter_title}, review score {result.review.score}"
     )
 
 

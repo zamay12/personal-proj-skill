@@ -74,6 +74,21 @@ python -m src.main summarize
 python -m src.main extract
 ```
 
+生成下一章续写闭环：
+
+```powershell
+python -m src.main continue-story --after-chapter 23 --direction "推进主角调查父亲失踪真相，不要立刻揭露黑袍人身份" --words 3000
+```
+
+续写闭环会按顺序生成：
+
+```text
+data/outputs/chapter_plan.json
+data/outputs/chapter_draft.md
+data/outputs/chapter_review.json
+data/outputs/chapter_final.md
+```
+
 查看版本：
 
 ```powershell
@@ -124,6 +139,7 @@ novel-continuation-agent/
 - 支持中文和英文章节标题识别，并切分章节与段落。
 - 支持章节摘要生成，并保存到 `kb/summaries.json`。
 - 支持从章节正文和摘要中抽取人物、事件、设定和伏笔知识库。
+- 支持续写闭环：剧情规划、正文起草、一致性审校和自动修订。
 - 提供续写 Agent 流程阶段枚举和状态输出。
 - 提供 pytest 基础测试。
 
