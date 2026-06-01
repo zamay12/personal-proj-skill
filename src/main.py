@@ -1,0 +1,71 @@
+import json
+from pathlib import Path
+
+import typer
+
+from src.chunker import split_book_into_chapters
+from src.continuation import continue_story
+from src.extractor import extract_knowledge
+from src.ingest import ingest_book
+from src.summarizer import summarize_chapters
+
+
+app = typer.Typer(help="Novel continuation agent commands.")
+
+
+@app.command()
+def ingest(txt_path: Path) -> None:
+    """Read a txt novel, split chapters, and save processed JSON."""
+    book = split_book_into_chapters(ingest_book(txt_path))
+    output_path = Path("data/processed/chapters.json")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    payload = {
+        "title": book.title,
+        "source_path": str(book.source_path) if book.source_path else None,
+        "encoding": book.encoding,
+        "chapters": [chapter.model_dump(mode="json") for chapter in book.chapters],
+    }
+    output_path.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    typer.echo(f"Saved {len(book.chapters)} chapters to {output_path}")
+
+
+@app.command()
+def summarize() -> None:
+    """Summarize processed chapters and save knowledge-base JSON."""
+    summaries = summarize_chapters()
+    typer.echo(f"Saved {len(summaries)} summaries to kb/summaries.json")
+
+
+@app.command()
+def extract() -> None:
+    """Extract knowledge from processed chapters and summaries."""
+    result = extract_knowledge()
+    typer.echo(
+        "Saved knowledge to kb/: "
+        f"{len(result.characters)} characters, "
+        f"{len(result.events)} events, "
+        f"{len(result.worldbuilding)} worldbuilding items, "
+        f"{len(result.foreshadowing)} foreshadowing items"
+    )
+
+
+@app.command("continue-story")
+def continue_story_command(
+    after_chapter: int = typer.Option(..., help="Continue after this chapter index."),
+    direction: str = typer.Option(..., help="User direction for the next chapter."),
+    words: int = typer.Option(3000, help="Target word count."),
+) -> None:
+    """Plan, draft, review, and revise the next chapter."""
+    result = continue_story(after_chapter=after_chapter, direction=direction, words=words)
+    typer.echo(
+        "Saved continuation outputs to data/outputs/: "
+        f"{result.plan.next_chapter_title}, review score {result.review.score}"
+    )
+
+
+if __name__ == "__main__":
+    app()
