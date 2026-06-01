@@ -4,6 +4,7 @@ from pathlib import Path
 import typer
 
 from src.chunker import split_book_into_chapters
+from src.extractor import extract_knowledge
 from src.ingest import ingest_book
 from src.summarizer import summarize_chapters
 
@@ -36,6 +37,19 @@ def summarize() -> None:
     """Summarize processed chapters and save knowledge-base JSON."""
     summaries = summarize_chapters()
     typer.echo(f"Saved {len(summaries)} summaries to kb/summaries.json")
+
+
+@app.command()
+def extract() -> None:
+    """Extract knowledge from processed chapters and summaries."""
+    result = extract_knowledge()
+    typer.echo(
+        "Saved knowledge to kb/: "
+        f"{len(result.characters)} characters, "
+        f"{len(result.events)} events, "
+        f"{len(result.worldbuilding)} worldbuilding items, "
+        f"{len(result.foreshadowing)} foreshadowing items"
+    )
 
 
 if __name__ == "__main__":

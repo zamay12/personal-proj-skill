@@ -62,6 +62,18 @@ python -m src.main ingest data/raw/novel.txt
 data/processed/chapters.json
 ```
 
+生成章节摘要：
+
+```powershell
+python -m src.main summarize
+```
+
+抽取人物、事件、设定和伏笔知识库：
+
+```powershell
+python -m src.main extract
+```
+
 查看版本：
 
 ```powershell
@@ -110,6 +122,8 @@ novel-continuation-agent/
 - 提供 pydantic 数据模型骨架。
 - 支持 txt 导入，自动尝试 `utf-8`、`utf-8-sig`、`gbk` 编码。
 - 支持中文和英文章节标题识别，并切分章节与段落。
+- 支持章节摘要生成，并保存到 `kb/summaries.json`。
+- 支持从章节正文和摘要中抽取人物、事件、设定和伏笔知识库。
 - 提供续写 Agent 流程阶段枚举和状态输出。
 - 提供 pytest 基础测试。
 

@@ -33,3 +33,29 @@ class ChapterSummary(BaseModel):
     new_settings: list[str]
     open_threads: list[str]
     emotional_tone: str = Field(min_length=1)
+
+
+class EvidenceMixin(BaseModel):
+    evidence: list[str] = Field(min_length=1)
+
+
+class CharacterCard(EvidenceMixin):
+    name: str = Field(min_length=1)
+    aliases: list[str] = Field(default_factory=list)
+    description: str = ""
+
+
+class EventItem(EvidenceMixin):
+    chapter: int = Field(ge=1)
+    summary: str = Field(min_length=1)
+
+
+class WorldbuildingItem(EvidenceMixin):
+    name: str = Field(min_length=1)
+    category: str = Field(min_length=1)
+    description: str = Field(min_length=1)
+
+
+class ForeshadowingItem(EvidenceMixin):
+    clue: str = Field(min_length=1)
+    status: str = Field(min_length=1)
